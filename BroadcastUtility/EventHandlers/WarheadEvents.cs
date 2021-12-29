@@ -48,19 +48,20 @@ namespace BroadcastUtility.EventHandlers
                 return;
 
             Broadcast broadcast;
+            string message;
             if (ev.IsAuto || ev.Player == null)
             {
                 broadcast = plugin.Config.WarheadConfig.AdminStartBroadcast;
-                broadcast.Content = broadcast.Content.Replace("$time", Warhead.RealDetonationTimer.ToString());
-                Map.Broadcast(broadcast);
+                message = broadcast.Content.Replace("$time", Warhead.RealDetonationTimer.ToString());
+                Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
                 return;
             }
 
             broadcast = plugin.Config.WarheadConfig.StartBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$time", Warhead.RealDetonationTimer.ToString())
+            message = broadcast.Content.Replace("$time", Warhead.RealDetonationTimer.ToString())
                 .Replace("$user", ev.Player.DisplayNickname ?? ev.Player.Nickname);
 
-            Map.Broadcast(broadcast);
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
 
         private void OnStopping(StoppingEventArgs ev)
@@ -75,8 +76,8 @@ namespace BroadcastUtility.EventHandlers
             }
 
             Broadcast broadcast = plugin.Config.WarheadConfig.CancelBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$user", ev.Player.DisplayNickname ?? ev.Player.Nickname);
-            Map.Broadcast(broadcast);
+            string message = broadcast.Content.Replace("$user", ev.Player.DisplayNickname ?? ev.Player.Nickname);
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
     }
 }

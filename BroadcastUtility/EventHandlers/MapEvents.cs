@@ -48,17 +48,18 @@ namespace BroadcastUtility.EventHandlers
 
         private void OnAnnouncingDecontamination(AnnouncingDecontaminationEventArgs ev)
         {
-            Log.Warn(ev.Id);
+            if (plugin.Config.DecontaminationConfig.TimedBroadcasts.TryGetValue(ev.Id, out Broadcast broadcast))
+                Map.Broadcast(broadcast);
         }
 
         private void OnAnnouncingNtfEntrance(AnnouncingNtfEntranceEventArgs ev)
         {
             Broadcast broadcast = plugin.Config.TeamRespawnConfig.MtfSpawnBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$unit", ev.UnitName)
+            string message = broadcast.Content.Replace("$unit", ev.UnitName)
                 .Replace("$num", ev.UnitNumber.ToString())
                 .Replace("$scps", ev.ScpsLeft.ToString());
 
-            Map.Broadcast(broadcast);
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
 
         private void OnDecontaminating(DecontaminatingEventArgs ev)
@@ -72,15 +73,15 @@ namespace BroadcastUtility.EventHandlers
             if (!ev.IsAllowed)
                 return;
 
-            if (Map.ActivatedGenerators == 3)
+            if (Map.ActivatedGenerators == 2)
             {
                 Map.Broadcast(plugin.Config.GeneratorsConfig.AllGeneratorsActivatedBroadcast);
                 return;
             }
 
             Broadcast broadcast = plugin.Config.GeneratorsConfig.GeneratorActivatedBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$generators", Map.ActivatedGenerators.ToString());
-            Map.Broadcast(broadcast);
+            string message = broadcast.Content.Replace("$generators", (Map.ActivatedGenerators + 1).ToString());
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
     }
 }

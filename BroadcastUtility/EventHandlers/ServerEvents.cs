@@ -72,12 +72,12 @@ namespace BroadcastUtility.EventHandlers
         private void OnRoundEnded(RoundEndedEventArgs ev)
         {
             Broadcast broadcast = plugin.Config.RoundEndedBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$classdescape", RoundSummary.EscapedClassD.ToString())
+            string message = broadcast.Content.Replace("$classdescape", RoundSummary.EscapedClassD.ToString())
                 .Replace("$sciescape", RoundSummary.EscapedScientists.ToString())
                 .Replace("$scpkills", RoundSummary.KilledBySCPs.ToString()
                 .Replace("$mtfspawn", plugin.MtfSpawned.ToString()));
 
-            Map.Broadcast(broadcast);
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
 
         private void OnRoundStart()
@@ -88,10 +88,10 @@ namespace BroadcastUtility.EventHandlers
                 List<Player> scps = Player.Get(Team.SCP).ToList();
 
                 Broadcast broadcast = plugin.Config.ScpSpawnBroadcast;
-                broadcast.Content = broadcast.Content.Replace("$scplist", string.Join(", ", scps.Select(player => player.Role.Translation())));
+                string message = broadcast.Content.Replace("$scplist", string.Join(", ", scps.Select(player => player.Role.Translation())));
 
                 foreach (Player player in scps)
-                    player.Broadcast(broadcast);
+                    player.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
             });
         }
 
@@ -99,6 +99,9 @@ namespace BroadcastUtility.EventHandlers
         {
             if (autoBroadcast.IsRunning)
                 Timing.KillCoroutines(autoBroadcast);
+
+            plugin.MtfSpawned = 0;
+            plugin.EnteredFemurTime = 0f;
         }
 
         private IEnumerator<float> RunAutoBroadcast()

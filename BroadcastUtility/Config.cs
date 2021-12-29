@@ -21,6 +21,12 @@ namespace BroadcastUtility
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the seconds after the femur breaker is made active that the button is usable.
+        /// </summary>
+        [Description("The seconds after the femur breaker is made active that the button is usable.")]
+        public float SecondsBeforeFemurActivation { get; set; } = 15f;
+
+        /// <summary>
         /// Gets or sets all roles and their respective translations.
         /// </summary>
         [Description("All roles and their respective translations.")]

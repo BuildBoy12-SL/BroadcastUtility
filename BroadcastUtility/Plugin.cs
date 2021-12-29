@@ -19,6 +19,7 @@ namespace BroadcastUtility
     {
         private PlayerEvents playerEvents;
         private MapEvents mapEvents;
+        private Scp106Events scp106Events;
         private ServerEvents serverEvents;
         private WarheadEvents warheadEvents;
 
@@ -31,6 +32,11 @@ namespace BroadcastUtility
         /// Gets or sets the amount of mtf that spawned during the round.
         /// </summary>
         public int MtfSpawned { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time that the femur was entered.
+        /// </summary>
+        public float EnteredFemurTime { get; set; }
 
         /// <inheritdoc />
         public override string Author { get; } = "Build";
@@ -59,6 +65,8 @@ namespace BroadcastUtility
             playerEvents.Subscribe();
             mapEvents = new MapEvents(this);
             mapEvents.Subscribe();
+            scp106Events = new Scp106Events(this);
+            scp106Events.Subscribe();
             serverEvents = new ServerEvents(this);
             serverEvents.Subscribe();
             warheadEvents = new WarheadEvents(this);
@@ -74,6 +82,8 @@ namespace BroadcastUtility
             playerEvents = null;
             mapEvents.Unsubscribe();
             mapEvents = null;
+            scp106Events.Unsubscribe();
+            scp106Events = null;
             serverEvents.Unsubscribe();
             serverEvents = null;
             warheadEvents.Unsubscribe();

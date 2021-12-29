@@ -15,6 +15,7 @@ namespace BroadcastUtility.EventHandlers
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using MEC;
+    using UnityEngine;
     using PlayerHandlers = Exiled.Events.Handlers.Player;
 
     /// <summary>
@@ -69,10 +70,11 @@ namespace BroadcastUtility.EventHandlers
             if (ev.Target.IsScp)
                 ShowScpTerminationBroadcast(ev);
 
-            if (Player.Get(ev.Target.Side).Count() == 2 &&
+            List<Player> lastPersonnelCheck = Player.Get(ev.Target.Side).ToList();
+            if (lastPersonnelCheck.Count == 2 &&
                 plugin.Config.LastPersonnelBroadcasts.TryGetValue(ev.Target.Side, out Broadcast broadcast))
             {
-                Map.Broadcast(broadcast);
+                lastPersonnelCheck.First(x => x != ev.Target).Broadcast(broadcast);
             }
 
             if (ev.Target.Role == RoleType.ClassD && Player.Get(RoleType.ClassD).Count() == 1)
@@ -88,10 +90,12 @@ namespace BroadcastUtility.EventHandlers
                 return;
 
             Broadcast broadcast = plugin.Config.FemurBreakerEnteredBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$victimrole", ev.Player.Role.Translation());
+            string message = broadcast.Content.Replace("$victimrole", ev.Player.Role.Translation());
 
             foreach (Player player in Player.Get(Team.SCP))
-                player.Broadcast(broadcast);
+                player.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
+
+            plugin.EnteredFemurTime = Time.time;
         }
 
         private void OnVerified(VerifiedEventArgs ev)
@@ -102,22 +106,23 @@ namespace BroadcastUtility.EventHandlers
         private void ShowScpTerminationBroadcast(DyingEventArgs ev)
         {
             Broadcast broadcast;
+            string message;
             if (ev.Killer == null)
             {
                 broadcast = plugin.Config.ScpTerminationConfig.ScpSuicideBroadcast;
-                broadcast.Content = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
+                message = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
                     .Replace("$scpusername", ev.Target.DisplayNickname ?? ev.Target.Nickname);
 
-                Map.Broadcast(broadcast);
+                Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
                 return;
             }
 
             broadcast = plugin.Config.ScpTerminationConfig.ScpTerminationBroadcast;
-            broadcast.Content = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
+            message = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
                 .Replace("$killerrolecolor", ev.Killer.RoleColor.ToHex())
                 .Replace("$killerteam", ev.Killer.Role.Translation());
 
-            Map.Broadcast(broadcast);
+            Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
 
         private IEnumerator<float> RunSpawnProtectionHint(Player player)
