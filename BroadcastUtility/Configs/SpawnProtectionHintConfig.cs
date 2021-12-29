@@ -23,7 +23,7 @@ namespace BroadcastUtility.Configs
         /// <summary>
         /// Gets or sets the message to show a user.
         /// </summary>
-        [Description("The message to show a user.")]
-        public string Content { get; set; } = "You are protected for $seconds seconds";
+        [Description("The message to show a user. Available Variables: $time")]
+        public string Content { get; set; } = "You are protected for $time seconds";
     }
 }

@@ -122,7 +122,7 @@ namespace BroadcastUtility.EventHandlers
 
         private IEnumerator<float> RunSpawnProtectionHint(Player player)
         {
-            for (int i = (int)CharacterClassManager.SProtectedDuration; i == 0; i--)
+            for (int i = (int)CharacterClassManager.SProtectedDuration; i > 0; i--)
             {
                 player.ShowHint(plugin.Config.SpawnProtectionHintConfig.Content.Replace("$time", i.ToString()));
                 yield return Timing.WaitForSeconds(0.9f);
