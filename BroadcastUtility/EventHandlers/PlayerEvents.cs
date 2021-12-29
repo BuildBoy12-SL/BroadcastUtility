@@ -57,7 +57,7 @@ namespace BroadcastUtility.EventHandlers
             if (ev.NewRole.GetTeam() == Team.MTF)
                 plugin.MtfSpawned++;
 
-            if (ev.IsAllowed && CharacterClassManager.EnableSP && plugin.Config.SpawnProtectionHintConfig.IsEnabled)
+            if (ev.IsAllowed && CharacterClassManager.EnableSP && plugin.Config.SpawnProtectionHintConfig.IsEnabled && CharacterClassManager.SProtectedTeam.Contains((int)ev.NewRole.GetTeam()))
                 Timing.RunCoroutine(RunSpawnProtectionHint(ev.Player));
         }
 

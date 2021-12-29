@@ -8,10 +8,14 @@
 namespace BroadcastUtility.Commands
 {
     using System;
+    using System.Text;
+    using BroadcastUtility.API;
     using CommandSystem;
     using Exiled.API.Features;
+    using NorthwoodLib.Pools;
 
     /// <inheritdoc />
+    [CommandHandler(typeof(ClientCommandHandler))]
     public class ScpList : ICommand
     {
         private readonly Plugin plugin;
@@ -52,7 +56,11 @@ namespace BroadcastUtility.Commands
                 return false;
             }
 
-            response = Methods.GenerateScpList();
+            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent().AppendLine();
+            foreach (Player scp in Player.Get(Team.SCP))
+                stringBuilder.Append(scp.Role.Translation()).Append(" - ").AppendLine(scp.DisplayNickname ?? scp.Nickname);
+
+            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder).TrimEnd();
             return true;
         }
     }

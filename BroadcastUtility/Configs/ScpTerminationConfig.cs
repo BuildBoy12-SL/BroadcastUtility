@@ -24,7 +24,7 @@ namespace BroadcastUtility.Configs
         /// <summary>
         /// Gets or sets the broadcast to display when an scp subject is terminated.
         /// </summary>
-        [Description("The broadcast to display when an scp subject is terminated. Available Variables: $scptype, $username")]
-        public Broadcast ScpSuicideBroadcast { get; set; } = new Broadcast("$username ($scptype) committed suicide");
+        [Description("The broadcast to display when an scp subject is terminated. Available Variables: $scptype, $scpusername")]
+        public Broadcast ScpSuicideBroadcast { get; set; } = new Broadcast("$scpusername ($scptype) committed suicide");
     }
 }
