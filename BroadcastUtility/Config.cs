@@ -9,6 +9,7 @@ namespace BroadcastUtility
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using BroadcastUtility.Commands;
     using BroadcastUtility.Configs;
     using Exiled.API.Enums;
     using Exiled.API.Features;
@@ -112,7 +113,7 @@ namespace BroadcastUtility
         /// <summary>
         /// Gets or sets all scplist related configs.
         /// </summary>
-        public ScpListConfig ScpListConfig { get; set; } = new ScpListConfig();
+        public ScpList ScpListConfig { get; set; } = new ScpList();
 
         /// <summary>
         /// Gets or sets all scp termination related configs.

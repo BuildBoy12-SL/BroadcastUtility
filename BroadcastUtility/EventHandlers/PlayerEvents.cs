@@ -70,9 +70,9 @@ namespace BroadcastUtility.EventHandlers
             if (ev.Target.IsScp)
                 ShowScpTerminationBroadcast(ev);
 
-            List<Player> lastPersonnelCheck = Player.Get(ev.Target.Side).ToList();
+            List<Player> lastPersonnelCheck = Player.Get(ev.Target.Role.Side).ToList();
             if (lastPersonnelCheck.Count == 2 &&
-                plugin.Config.LastPersonnelBroadcasts.TryGetValue(ev.Target.Side, out Broadcast broadcast))
+                plugin.Config.LastPersonnelBroadcasts.TryGetValue(ev.Target.Role.Side, out Broadcast broadcast))
             {
                 lastPersonnelCheck.First(x => x != ev.Target).Broadcast(broadcast);
             }
@@ -90,7 +90,7 @@ namespace BroadcastUtility.EventHandlers
                 return;
 
             Broadcast broadcast = plugin.Config.FemurBreakerEnteredBroadcast;
-            string message = broadcast.Content.Replace("$victimrole", ev.Player.Role.Translation());
+            string message = broadcast.Content.Replace("$victimrole", ev.Player.Role.Type.Translation());
 
             foreach (Player player in Player.Get(Team.SCP))
                 player.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
@@ -110,7 +110,7 @@ namespace BroadcastUtility.EventHandlers
             if (ev.Killer == null)
             {
                 broadcast = plugin.Config.ScpTerminationConfig.ScpSuicideBroadcast;
-                message = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
+                message = broadcast.Content.Replace("$scptype", ev.Target.Role.Type.Translation())
                     .Replace("$scpusername", ev.Target.DisplayNickname ?? ev.Target.Nickname);
 
                 Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
@@ -118,9 +118,9 @@ namespace BroadcastUtility.EventHandlers
             }
 
             broadcast = plugin.Config.ScpTerminationConfig.ScpTerminationBroadcast;
-            message = broadcast.Content.Replace("$scptype", ev.Target.Role.Translation())
-                .Replace("$killerrolecolor", ev.Killer.RoleColor.ToHex())
-                .Replace("$killerteam", ev.Killer.Role.Translation());
+            message = broadcast.Content.Replace("$scptype", ev.Target.Role.Type.Translation())
+                .Replace("$killerrolecolor", ev.Killer.Role.Color.ToHex())
+                .Replace("$killerteam", ev.Killer.Role.Type.Translation());
 
             Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }

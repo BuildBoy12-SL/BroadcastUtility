@@ -11,6 +11,7 @@ namespace BroadcastUtility
     using BroadcastUtility.EventHandlers;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using RemoteAdmin;
 
     /// <summary>
     /// The main plugin class.
@@ -39,22 +40,22 @@ namespace BroadcastUtility
         public float EnteredFemurTime { get; set; }
 
         /// <inheritdoc />
-        public override string Author { get; } = "Build";
+        public override string Author => "Build";
 
         /// <inheritdoc />
-        public override string Name { get; } = "BroadcastUtility";
+        public override string Name => "BroadcastUtility";
 
         /// <inheritdoc/>
-        public override string Prefix { get; } = "BroadcastUtility";
+        public override string Prefix => "BroadcastUtility";
 
         /// <inheritdoc />
-        public override PluginPriority Priority { get; } = PluginPriority.Lower;
+        public override PluginPriority Priority => PluginPriority.Lower;
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(4, 1, 7);
+        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
 
         /// <inheritdoc/>
-        public override Version Version { get; } = new Version(1, 0, 0);
+        public override Version Version { get; } = new Version(1, 0, 1);
 
         /// <inheritdoc />
         public override void OnEnabled()
@@ -92,6 +93,18 @@ namespace BroadcastUtility
             Instance = null;
 
             base.OnDisabled();
+        }
+
+        /// <inheritdoc />
+        public override void OnRegisteringCommands()
+        {
+            QueryProcessor.DotCommandHandler.RegisterCommand(Config.ScpListConfig);
+        }
+
+        /// <inheritdoc />
+        public override void OnUnregisteringCommands()
+        {
+            QueryProcessor.DotCommandHandler.UnregisterCommand(Config.ScpListConfig);
         }
     }
 }

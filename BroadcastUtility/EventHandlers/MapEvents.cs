@@ -7,6 +7,7 @@
 
 namespace BroadcastUtility.EventHandlers
 {
+    using System.Linq;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using MapHandlers = Exiled.Events.Handlers.Map;
@@ -73,14 +74,15 @@ namespace BroadcastUtility.EventHandlers
             if (!ev.IsAllowed)
                 return;
 
-            if (Map.ActivatedGenerators == 2)
+            int engagedGenerators = Generator.List.Count(x => x.IsEngaged);
+            if (engagedGenerators == 3)
             {
                 Map.Broadcast(plugin.Config.GeneratorsConfig.AllGeneratorsActivatedBroadcast);
                 return;
             }
 
             Broadcast broadcast = plugin.Config.GeneratorsConfig.GeneratorActivatedBroadcast;
-            string message = broadcast.Content.Replace("$generators", (Map.ActivatedGenerators + 1).ToString());
+            string message = broadcast.Content.Replace("$generators", engagedGenerators.ToString());
             Map.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
         }
     }

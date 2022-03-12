@@ -88,7 +88,7 @@ namespace BroadcastUtility.EventHandlers
                 List<Player> scps = Player.Get(Team.SCP).ToList();
 
                 Broadcast broadcast = plugin.Config.ScpSpawnBroadcast;
-                string message = broadcast.Content.Replace("$scplist", string.Join(", ", scps.Select(player => player.Role.Translation())));
+                string message = broadcast.Content.Replace("$scplist", string.Join(", ", scps.Select(player => player.Role.Type.Translation())));
 
                 foreach (Player player in scps)
                     player.Broadcast(broadcast.Duration, message, broadcast.Type, broadcast.Show);
